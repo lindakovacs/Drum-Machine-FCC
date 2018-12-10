@@ -1,0 +1,175 @@
+body {
+    padding-bottom: 20px;
+    font-family: 'Raleway', sans-serif;
+}
+header {
+	padding: 10px 0;
+	margin-bottom: 3px;
+	text-align: center;
+	color: #fff;
+  background-color: #000000;
+  font-family: 'Raleway', sans-serif;
+  font-size: 25px;
+}
+%center {
+  position:relative;
+  left:0; right:0;
+  top:0; bottom:0;
+  margin:auto;
+}
+
+/* Horizontally and vertically center elements with flex */
+%flex-center {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+#drum-machine {  
+  @extend %center;
+  height:400px;
+  width:800px;  
+  max-width:95%;
+  max-height:95%;
+  overflow:auto;
+  @extend %flex-center;
+  background-color: #3861F3;
+  color:#EAEBEC;
+}
+
+
+/* Controls container */
+#controlsContainer{
+  display:inline-block;
+  position:relative;
+  height:100%;
+  width:50%;
+  max-width:50%;
+}
+
+#keysContainer {
+  position:relative;
+  height:75%;
+  width:50%;
+  max-width:50%;
+  @extend %flex-center;
+  flex-wrap:wrap;
+}
+
+/* drum pads */
+.drum-pad {
+  height: 25%;
+  width: 25%;
+  margin:2%;
+  border-radius:50%;
+  color: #ffffff;
+  outline:none;
+  border:none;
+  font-size:30px;
+  background-color:#9733ee;
+}
+
+.drum-pad:active {
+  transform: translateY(1px);
+}
+
+/* Power switch */
+#powerSwitch {  
+  height:33%;
+  width:100%;
+  @extend %flex-center;
+}
+
+#onOffContainer {
+  background-color:#ffffff;
+  width:15%;
+  height:20%;
+  margin:0 1%;
+  @extend %flex-center;
+}
+
+#on, #off {
+  width:45%;
+  height:80%;
+  margin:5%;
+}
+
+#on {
+  margin-right:5%;
+}
+
+/* Display component */
+#display {
+  font-size:1.2em;
+  height:50%;
+  width:60%;  
+  @extend %flex-center;
+  background-color:#ffffff;
+  color:#000000;
+}
+
+#displayContainer {
+  height:33%;
+  width:100%; 
+  @extend %flex-center;
+}
+
+/* Volume slider */
+#volumeSliderContainer {
+  height:33%;
+  width:100%; 
+  @extend %flex-center;
+}
+
+#volumeSlider {
+  -webkit-appearance: none;
+  outline:none;
+  width:70%;
+  height:5%;
+  opacity:0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+#volumeSlider:hover{
+  opacity:1;
+}
+#volumeSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #9733ee;
+    cursor: pointer;
+    border-radius:100%;
+}
+
+#volumeSlider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #9733ee;
+    cursor: pointer;
+}
+
+#footer {
+	width: 100%;
+	color: #fff;
+	padding: 20px;
+	width: 100%;
+	text-align: center;
+	background-color: #000;
+	font-size: 15px;
+}
+
+.footer a {
+	color: #fff;
+	position: relative;
+	text-decoration: none;
+	font-weight: bold;
+}
+.footer a:hover {
+	color: #000;
+	background-color: #fff;
+}
+.footer p {
+	font-size: 17px;
+}

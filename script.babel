@@ -1,0 +1,184 @@
+const keys = ['Q', 'W', 'E', 'A', 'S', 'D', 'Z', 'X', 'C'];
+const url = 'https://s3.amazonaws.com/freecodecamp/drums/';
+const clips = [
+    'Heater-1.mp3',
+    'Heater-2.mp3',
+    'Heater-3.mp3',
+    'Heater-4_1.mp3',
+    'Heater-6.mp3',
+    'Dsc_Oh.mp3',
+    'Kick_n_Hat.mp3',
+    'RP4_KICK_1.mp3',
+    'Cev_H2.mp3'
+    ];
+
+function formatClipName(clip) {
+    return clip.slice(0,-4).split('-').join(' ');
+}
+
+class App extends React.Component {
+    constructor(props){
+      super(props);
+      this.state = {
+        currentClip: String.fromCharCode(160),
+        switchedOn:true,
+        volume:50
+      }
+      this.handleSelectedClip = this.handleSelectedClip.bind(this);
+      this.handleOnOffSwitch = this.handleOnOffSwitch.bind(this);
+      this.handleVolumeChange = this.handleVolumeChange.bind(this);
+      this.handleKeyDown = this.handleKeyDown.bind(this);
+      this.play = this.play.bind(this);
+    }      
+
+    componentDidMount() {
+        document.addEventListener('keydown', this.handleKeyDown)
+    }
+
+    play(audio) {
+        audio.volume = this.state.volume / 100;
+        audio.currentTime = 0;
+        audio.play();
+    }
+
+    handleSelectedClip (key, clip) {
+        const audio = this[key];
+        if (this.state.switchedOn) {
+            this.setState({
+                currentClip: formatClipName(clip)
+            })
+            this.play(audio);
+        }        
+    }
+
+    handleKeyDown(e) {
+        let key = e.key
+        if (this.state.switchedOn && keys.some( el => el.toLowerCase() === key)) {               
+            const idx = keys.findIndex( el => el.toLowerCase() === key );
+            this.handleSelectedClip(key.toUpperCase(), clips[idx]); 
+        }        
+    }
+
+    handleOnOffSwitch() {
+        this.setState({
+            switchedOn: !this.state.switchedOn,
+            currentClip:String.fromCharCode(160)
+        })
+    }
+
+    handleVolumeChange(e) {
+        const volume = e.target.value;
+        this.setState({
+            volume,
+            currentClip: 'Volume: ' + volume
+        })        
+        setTimeout( () => this.setState({ currentClip:'' }), 1500)
+    }
+    
+    render() {  
+  
+      return (
+        <div 
+            >        
+            <div id='drum-machine'>
+                <div id='keysContainer'>
+                   { 
+                       keys.map((key, idx) => 
+                            <Key
+                                key = {idx}
+                                keyName = {key}
+                                clip = {clips[idx]}         
+                                handleClick = {this.handleSelectedClip}
+                                activated = {this.state.switchedOn}          
+                                volume = {this.state.volume / 100}
+                                audio = { el => this[key] = el}
+                            />
+                        )
+                    }
+                </div> 
+
+                <div id='controlsContainer' >
+                    <PowerButton
+                        handleClick = {this.handleOnOffSwitch}
+                        turnedOn = {this.state.switchedOn}
+                    />
+                    <Display 
+                        clip = {this.state.currentClip}
+                    />
+                    <VolumeSlider
+                        handleChange={this.handleVolumeChange}
+                    />
+                </div>            
+
+            </div>
+        </div>
+      );
+    }    
+}
+  
+class Key extends React.Component {
+    constructor(props) {
+        super(props);
+    }    
+
+    render() {
+        const {handleClick, activated, keyName, clip, audio } = this.props;
+        return (
+            <button                
+                className = 'drum-pad' 
+                id = {clip.slice(0,-4)}
+                { ...!activated && {disabled:true} }
+                onClick={ () => {
+                    handleClick(keyName, clip);               
+                }}
+            >
+               <audio src={url + clip} className='clip' id={keyName} ref={audio}>
+                </audio> 
+                {keyName}
+            </button>
+        )
+    }     
+}
+
+function PowerButton(props) {
+    const {turnedOn, handleClick} = props;
+    return (
+        <div id='powerSwitch'>
+            <div>ON</div>
+            <div id='onOffContainer' onClick={() => handleClick()}>
+                <div id='on' style={ turnedOn ? {backgroundColor:'#9733ee'} : {} } ></div>
+                <div id='off' style={ turnedOn ? {} : {backgroundColor:'#9733ee'} } ></div>
+            </div>              
+            <div>OFF</div>
+        </div>       
+    )
+}
+
+function Display({clip}) {
+    return (
+        <div id='displayContainer'>
+            <p id="display" >
+                {clip}
+            </p>        
+        </div>
+    )
+}
+
+function VolumeSlider({handleChange}) {
+    return (
+        <div id='volumeSliderContainer'>
+            <input 
+              id='volumeSlider'
+              type="range" 
+              min="1" 
+              max="100" 
+              onChange={(e) => handleChange(e)}
+            />
+        </div>
+    )
+}
+
+ReactDOM.render(
+  <App/>,
+  document.getElementById('app')
+)
